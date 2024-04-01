@@ -1,0 +1,11 @@
+function [y,a]=mulaw(x,mu)
+    a=max(abs(x));
+    y=(log(1+mu*abs(x/a))./log(1+mu)).*sign(x);
+function [sqnr,a_quan,code]=mula_pcm(a,n,mu)
+    [y,maximum]=mulaw(a,mu);
+    [sqnr,y_q,code]=u_pcm(y,n);
+    a_quan=invmulaw(y_q,mu);
+    a_quan=maximum*a_quan;
+    sqnr=20*log10(norm(a)/norm(a-a_quan));
+    function x=invmulaw(y,mu)
+    x=(((1+mu).^(abs(y))-1)./mu).*sign(y);
